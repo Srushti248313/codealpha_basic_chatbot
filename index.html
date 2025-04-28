@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat with CodeAlpha Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #8E2DE2, #4A00E0);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      background: white;
+      width: 400px;
+      height: 550px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #4A00E0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f7f7f7;
+    }
+
+    .chat-messages p {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 75%;
+    }
+
+    .user-message {
+      background: #DCF8C6;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .bot-message {
+      background: #E2E2E2;
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: 1px solid #4A00E0;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chat-input button {
+      background: #4A00E0;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .chat-input button:hover {
+      background: #5f00ff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">
+    CodeAlpha Bot 🤖
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <p class="bot-message">Hello! 👋 I'm your friendly bot. Ask me anything!</p>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+function sendMessage() {
+  const userInput = document.getElementById('userInput').value;
+  if (userInput.trim() === '') return;
+
+  const userMessage = document.createElement('p');
+  userMessage.className = 'user-message';
+  userMessage.textContent = userInput;
+  document.getElementById('chat-messages').appendChild(userMessage);
+
+  fetch(`/get?msg=${userInput}`)
+    .then(response => response.text())
+    .then(botResponse => {
+      const botMessage = document.createElement('p');
+      botMessage.className = 'bot-message';
+      botMessage.textContent = botResponse;
+      document.getElementById('chat-messages').appendChild(botMessage);
+
+      document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+    });
+
+  document.getElementById('userInput').value = '';
+}
+</script>
+
+</body>
+</html>
